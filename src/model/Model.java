@@ -9,12 +9,12 @@ import java.util.Set;
 import java.util.Stack;
 
 public class Model {
-    public static final double size = 900;
+    public static final double size = 900; // Size of Window (width and height)
     public static final double gravitationalConstant = 0.002;
     public static final double lightSpeed = 10;//the smaller, the larger is the chunk of universe we simulate
     public static final double timeFrame = 20;//the bigger, the shorter is the time of a step
-    public List<Particle> p = new ArrayList<Particle>();
-    public volatile List<DrawableParticle> pDraw = new ArrayList<DrawableParticle>();
+    public List<Particle> p = new ArrayList<>();
+    public volatile List<DrawableParticle> pDraw = new ArrayList<>();
 
     public void step() {
         for (Particle p : this.p) {
@@ -28,7 +28,7 @@ public class Model {
     }
 
     private void updateGraphicalRepresentation() {
-        ArrayList<DrawableParticle> d = new ArrayList<DrawableParticle>();
+        ArrayList<DrawableParticle> d = new ArrayList<>();
         Color c = Color.ORANGE;
         for (Particle p : this.p) {
             d.add(new DrawableParticle((int) p.x, (int) p.y, (int) Math.sqrt(p.mass), c));
@@ -37,12 +37,11 @@ public class Model {
     }
 
     public void mergeParticles() {
-        Stack<Particle> deadPs = new Stack<Particle>();
+        Stack<Particle> deadPs = new Stack<>();
         for (Particle p : this.p) {
             if (!p.impacting.isEmpty()) {
                 deadPs.add(p);
             }
-            ;
         }
         this.p.removeAll(deadPs);
         while (!deadPs.isEmpty()) {
@@ -54,10 +53,10 @@ public class Model {
     }
 
     private Set<Particle> getSingleChunck(Particle current) {
-        Set<Particle> impacting = new HashSet<Particle>();
+        Set<Particle> impacting = new HashSet<>();
         impacting.add(current);
         while (true) {
-            Set<Particle> tmp = new HashSet<Particle>();
+            Set<Particle> tmp = new HashSet<>();
             for (Particle pi : impacting) {
                 tmp.addAll(pi.impacting);
             }

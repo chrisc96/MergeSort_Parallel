@@ -12,7 +12,7 @@ public class Particle {
         this.y = y;
     }
 
-    public Set<Particle> impacting = new HashSet<Particle>();
+    public Set<Particle> impacting = new HashSet<>();
     public double mass;
     public double speedX;
     public double speedY;
@@ -23,10 +23,10 @@ public class Particle {
         x += speedX / (Model.timeFrame);
         y += speedY / (Model.timeFrame);
         //uncomment the following to have particle bouncing on the boundary
-        //if(this.x<0){this.speedX*=-1;}
-        //if(this.y<0){this.speedY*=-1;}
-        //if(this.x>Model.size){this.speedX*=-1;}
-        //if(this.y>Model.size){this.speedY*=-1;}
+        if(this.x<0){this.speedX*=-1;}
+        if(this.y<0){this.speedY*=-1;}
+        if(this.x>Model.size){this.speedX*=-1;}
+        if(this.y>Model.size){this.speedY*=-1;}
     }
 
     public boolean isImpact(double dist, double otherMass) {
