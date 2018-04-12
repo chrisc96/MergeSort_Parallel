@@ -30,7 +30,7 @@ public class Gui extends JFrame implements Runnable {
         pack();
         setVisible(true);
         scheduler.scheduleAtFixedRate(
-                () -> SwingUtilities.invokeLater(() -> repaint()),
+                () -> SwingUtilities.invokeLater(this::repaint),
                 500, 25, TimeUnit.MILLISECONDS
         );
     }
@@ -49,14 +49,15 @@ public class Gui extends JFrame implements Runnable {
                     for (int i = 0; i < stepsForFrame; i++) {
                         m.step();
                     }
-                    ut = System.currentTimeMillis() - ut;//used time
-                    //System.out.println("Particles: "+m.p.size()+" time:"+ut);//if you want to have an idea of the time consumption
+                    ut = System.currentTimeMillis() - ut;// used time for n stepsForFrame
+                    // System.out.println("Particles: "+m.p.size()+" time:"+ut+"ms"); //if you want to have an idea of the time consumption
                     long sleepTime = frameTime - ut;
                     if (sleepTime > 1) {
-                        Thread.sleep(sleepTime);
+                        Thread.sleep(sleepTime); // Wait until readyToRefresh...
                     }
                 }//if the step was short enough, it wait to make it at least frameTime long.
-            } catch (Throwable t) {//not a perfect solution, but
+            }
+            catch (Throwable t) { //not a perfect solution, but
                 t.printStackTrace();//makes sure you see the error and the program dies.
                 System.exit(0);//the "right" solution is much more involved
             }//and would require storing and passing the exception between different objects.
@@ -66,7 +67,7 @@ public class Gui extends JFrame implements Runnable {
     public static void main(String[] args) {
         //Model m=DataSetLoader.getRegularGrid(100, 800, 40);//Try those configurations
         //Model m=DataSetLoader.getRandomRotatingGrid(100, 800, 40);
-        //Model m=DataSetLoader.getRandomSet(100, 800, 1//000);
+        //Model m=DataSetLoader.getRandomSet(100, 800, 1000);
         Model m = DataSetLoader.getRandomSet(100, 800, 100);
         //Model m=DataSetLoader.getRandomGrid(100, 800, 30);
         scheduler.schedule(new MainLoop(m), 500, TimeUnit.MILLISECONDS);
