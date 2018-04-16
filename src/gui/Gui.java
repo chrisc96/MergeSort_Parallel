@@ -74,6 +74,5 @@ public class Gui extends JFrame implements Runnable {
         //Model m=DataSetLoader.getRandomGrid(100, 800, 30);
         scheduler.schedule(new MainLoop(m), 500, TimeUnit.MILLISECONDS);
         SwingUtilities.invokeLater(new Gui(m));
-
     }
 }
