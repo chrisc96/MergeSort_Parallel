@@ -11,10 +11,11 @@ import datasets.DataSetLoader;
 import model.Model;
 
 public class Gui extends JFrame implements Runnable {
-    private static int frameTime = 10;//use a bigger or smaller number for faster/slower simulation
-    private static int stepsForFrame = 20;//use a bigger or smaller number for faster/slower simulation
+    private static int frameTime = 5; //use a bigger or smaller number for faster/slower simulation
+    private static int stepsForFrame = 60; //use a bigger or smaller number for faster/slower simulation
     //it will attempt to do 4 steps every 20 milliseconds (less if the machine is too slow)
 
+    // One thread for the GUI and one for the main loop
     public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
     Model m;
 
@@ -31,7 +32,7 @@ public class Gui extends JFrame implements Runnable {
         setVisible(true);
         scheduler.scheduleAtFixedRate(
                 () -> SwingUtilities.invokeLater(this::repaint),
-                500, 25, TimeUnit.MILLISECONDS
+                20, 1, TimeUnit.MILLISECONDS
         );
     }
 
@@ -46,16 +47,17 @@ public class Gui extends JFrame implements Runnable {
             try {
                 while (true) {
                     long ut = System.currentTimeMillis();
+                    // 60 frames. step() is like the tick() method
                     for (int i = 0; i < stepsForFrame; i++) {
                         m.step();
                     }
-                    ut = System.currentTimeMillis() - ut;// used time for n stepsForFrame
+                    ut = System.currentTimeMillis() - ut; // used time for n stepsForFrame
                     // System.out.println("Particles: "+m.p.size()+" time:"+ut+"ms"); //if you want to have an idea of the time consumption
                     long sleepTime = frameTime - ut;
                     if (sleepTime > 1) {
                         Thread.sleep(sleepTime); // Wait until readyToRefresh...
                     }
-                }//if the step was short enough, it wait to make it at least frameTime long.
+                } //if the step was short enough, it wait to make it at least frameTime long.
             }
             catch (Throwable t) { //not a perfect solution, but
                 t.printStackTrace();//makes sure you see the error and the program dies.

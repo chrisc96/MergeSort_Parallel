@@ -1,0 +1,24 @@
+NWEN 303 Project 1:
+
+Task 1: How the model.java class works
+
+Beginning with the fields at the top of the class, 'size' represents the size of the GUI window in width and height.
+It's default value is 900, i.e therefore a 900 x 900 window is created using this field.
+
+The fields gravitionalConstant, lightSpeed and timeFrame are all used in the logic of the particle in the 'interact' method. 
+The gravitionalConstant constant field represents the attraction that particles have to other particles. It is a constant acceleration force.
+The lightspeed constant how quickly the particles move in a certain direction accelerated by the gravitionalConstant. Thus these two work in a counter balance effect.
+The timeFrame constant controls the speed of the particles, i.e how far each particle can move in one given timeFrame. The higher the value the shorter the timestep.
+
+P is the list of Particles in the model simulation. The particles themselves contain business logic that is used in the model to determine how they move, act and collide with other particles.
+
+pDraw is a list of DrawableParticles. Each entry in this list is equivalent to the same indexed Particle in list 'p'. Each DrawableParticle has unique visual attributes relevant to the GUI but not relevant to the model. This list is listed as volatile, this is because of the structure of the mainLoop which calls step() when pDraw is updated. Essentially because there are 2 threads running the simulation, one for the GUI and one for the model, we need to make sure that the data that the GUI is using to draw is not cached. This is why the pDraw is atomically updated at the end of updateGraphicalRepresentation() too to avoid timeSlicing issues where the data drawn and the data stored in 'p' do not match.
+
+The step() method operates like a tick method. It is called via the MainLoop class inside the GUI class and runs on its own thread. It has two purposes. In order it updates and then merges the list of particles that have collided and then updates the view on each call to reflect these changes.
+
+How the algorithm works for combining particles that collided:
+
+It works by making each particle interact with every other particle (not inc. itself) in the simulation via a nested loop (second loop contained in particle class). Going deeper into this, if we look at the interact() method we can see new speeds and directions etc are calculated for each particle. One thing that is important that is calculated is if any other particles are impacting with us (our particle), if they are, we add them to our own personal impacting list for our particle.
+Stepping back out to the step() method, we merge the particles. In the previous section of step() every particle touching any other particle was added to their impacting list, transitively this meant they were impacting something. In mergeParticles() we look through every particle and looking at their impacting list and if it's not empty they're impacting with another so we add it to a 'deadParticles' stack and remove all these from 'p', the list of particles in the simulation.
+
+CONTINUE HERE. LINE 51 in Model.
