@@ -1,18 +1,20 @@
 package model;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ModelParallel extends Model {
 
-    // Model and View update. Like a tick method. Called every frame.
+    ExecutorService pool = Executors.newWorkStealingPool();
+
     @Override
     public void step() {
+        // long before = System.currentTimeMillis();
         p.parallelStream().forEach(p -> p.interact(this));
-
+        // System.out.println("Time taken: " + (System.currentTimeMillis() - before));
         // How to parallise this?
         mergeParticles();
 
@@ -29,22 +31,32 @@ public class ModelParallel extends Model {
         for (Particle p : this.p) {
             d.add(new DrawableParticle((int) p.x, (int) p.y, (int) Math.sqrt(p.mass), c));
         }
-        this.pDraw = d;//atomic update
+        this.pDraw = d; //atomic update
     }
 
     public void mergeParticles() {
         Stack<Particle> deadPs = new Stack<>();
+
+        // Not worth the overheads of putting in parallel
         for (Particle p : this.p) {
             if (!p.impacting.isEmpty()) {
                 deadPs.add(p);
             }
         }
         this.p.removeAll(deadPs);
+
         while (!deadPs.isEmpty()) {
             Particle current = deadPs.pop();
-            Set<Particle> ps = getSingleChunck(current);
-            deadPs.removeAll(ps);
-            this.p.add(mergeParticles(ps));
+            try {
+                Set<Particle> ps = pool.submit(() -> getSingleChunck(current)).get();
+
+                deadPs.removeAll(ps);
+
+                this.p.add(mergeParticles(ps));
+            }
+            catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -53,9 +65,14 @@ public class ModelParallel extends Model {
         impacting.add(current);
         while (true) {
             Set<Particle> tmp = new HashSet<>();
-            for (Particle pi : impacting) {
-                tmp.addAll(pi.impacting);
+
+            synchronized (this) {
+                for (Particle pi : impacting) {
+                    // Write
+                    tmp.addAll(pi.impacting);
+                }
             }
+
             boolean changed = impacting.addAll(tmp);
             if (!changed) {
                 break;
