@@ -4,13 +4,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import model.DrawableParticle;
 import model.Model;
-import model.Particle;
+import model.SeqModel;
 
 public class Canvas extends JPanel {
     Model m;
@@ -31,6 +30,6 @@ public class Canvas extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension((int) Model.size, (int) Model.size);
+        return new Dimension((int) SeqModel.size, (int) SeqModel.size);
     }
 }

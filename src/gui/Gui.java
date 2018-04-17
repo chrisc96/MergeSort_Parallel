@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import datasets.DataSetLoader;
 import model.Model;
+import model.SeqModel;
 
 public class Gui extends JFrame implements Runnable {
     private static int frameTime = 5; //use a bigger or smaller number for faster/slower simulation
