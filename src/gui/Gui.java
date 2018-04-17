@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 import datasets.DataSetLoader;
+import datasets.ModelFactory;
 import model.Model;
 import model.SeqModel;
 
@@ -68,11 +69,22 @@ public class Gui extends JFrame implements Runnable {
     }
 
     public static void main(String[] args) {
-        //Model m=DataSetLoader.getRegularGrid(100, 800, 40);//Try those configurations
-        //Model m=DataSetLoader.getRandomRotatingGrid(100, 800, 40);
-        //Model m=DataSetLoader.getRandomSet(100, 800, 1000);
-        Model m = DataSetLoader.getRandomSet(100, 800, 100);
-        //Model m=DataSetLoader.getRandomGrid(100, 800, 30);
+        // Sequential Models
+
+        // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelFactory.ModelType.SEQUENTIAL);
+        // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelFactory.ModelType.SEQUENTIAL);
+        // Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.SEQUENTIAL);
+        Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelFactory.ModelType.SEQUENTIAL);
+        // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelFactory.ModelType.SEQUENTIAL);
+
+        // Parallel Models
+
+        // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelFactory.ModelType.PARALLEL);
+        // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelFactory.ModelType.PARALLEL);
+        // Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.PARALLEL);
+        // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelFactory.ModelType.PARALLEL);
+        // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelFactory.ModelType.PARALLEL);
+
         scheduler.schedule(new MainLoop(m), 500, TimeUnit.MILLISECONDS);
         SwingUtilities.invokeLater(new Gui(m));
     }

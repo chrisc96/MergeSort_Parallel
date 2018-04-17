@@ -9,11 +9,16 @@ import model.SeqModel;
  */
 public class ModelFactory {
 
-    public Model createModel(String type) {
-        if (type.equalsIgnoreCase("Sequential")) {
+    public enum ModelType {
+        SEQUENTIAL,
+        PARALLEL
+    }
+
+    public Model createModel(ModelType type) {
+        if (type.ordinal() == 0) {
             return new SeqModel();
         }
-        else if (type.equalsIgnoreCase("Parallel")) {
+        else if (type.ordinal() == 1) {
             return new ParModel();
         }
         else {
