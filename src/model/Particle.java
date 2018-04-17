@@ -19,14 +19,14 @@ public class Particle {
     public double x;
     public double y;
 
-    public void move(Model m) {
-        x += speedX / (Model.timeFrame);
-        y += speedY / (Model.timeFrame);
+    public void move(SeqModel m) {
+        x += speedX / (SeqModel.timeFrame);
+        y += speedY / (SeqModel.timeFrame);
         //uncomment the following to have particle bouncing on the boundary
         if(this.x<0){this.speedX*=-1;}
         if(this.y<0){this.speedY*=-1;}
-        if(this.x>Model.size){this.speedX*=-1;}
-        if(this.y>Model.size){this.speedY*=-1;}
+        if(this.x> SeqModel.size){this.speedX*=-1;}
+        if(this.y> SeqModel.size){this.speedY*=-1;}
     }
 
     public boolean isImpact(double dist, double otherMass) {
@@ -59,7 +59,7 @@ public class Particle {
         return distX * distX + distY * distY;
     }
 
-    public void interact(Model m) {
+    public void interact(SeqModel m) {
         for (Particle p : m.p) {
             if (p == this) continue;
             double dirX = -Math.signum(this.x - p.x);
@@ -69,14 +69,14 @@ public class Particle {
                 this.impacting.add(p);
                 continue;
             }
-            dirX = p.mass * Model.gravitationalConstant * dirX / dist;
-            dirY = p.mass * Model.gravitationalConstant * dirY / dist;
-            assert this.speedX <= Model.lightSpeed : this.speedX;
-            assert this.speedY <= Model.lightSpeed : this.speedY;
+            dirX = p.mass * SeqModel.gravitationalConstant * dirX / dist;
+            dirY = p.mass * SeqModel.gravitationalConstant * dirY / dist;
+            assert this.speedX <= SeqModel.lightSpeed : this.speedX;
+            assert this.speedY <= SeqModel.lightSpeed : this.speedY;
             double newSpeedX = this.speedX + dirX;
-            newSpeedX /= (1 + (this.speedX * dirX) / Model.lightSpeed);
+            newSpeedX /= (1 + (this.speedX * dirX) / SeqModel.lightSpeed);
             double newSpeedY = this.speedY + dirY;
-            newSpeedY /= (1 + (this.speedY * dirY) / Model.lightSpeed);
+            newSpeedY /= (1 + (this.speedY * dirY) / SeqModel.lightSpeed);
             if (!Double.isNaN(dirX)) {
                 this.speedX = newSpeedX;
             }
