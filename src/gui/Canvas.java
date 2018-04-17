@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 import model.DrawableParticle;
 import model.Model;
-import model.SeqModel;
+import model.ModelSequential;
 
 public class Canvas extends JPanel {
     Model m;
@@ -30,6 +30,6 @@ public class Canvas extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension((int) SeqModel.size, (int) SeqModel.size);
+        return new Dimension((int) ModelSequential.size, (int) ModelSequential.size);
     }
 }
