@@ -1,8 +1,8 @@
 package datasets;
 
 import model.Model;
-import model.ParModel;
-import model.SeqModel;
+import model.ModelParallel;
+import model.ModelSequential;
 
 /**
  * Created by Chris on 17/04/2018.
@@ -16,10 +16,10 @@ public class ModelFactory {
 
     public Model createModel(ModelType type) {
         if (type.ordinal() == 0) {
-            return new SeqModel();
+            return new ModelSequential();
         }
         else if (type.ordinal() == 1) {
-            return new ParModel();
+            return new ModelParallel();
         }
         else {
             throw new IllegalArgumentException("Model parameter type invalid");

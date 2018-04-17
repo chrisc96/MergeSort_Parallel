@@ -8,11 +8,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
 
-public class SeqModel extends Model {
-    public static final double size = 900; // Size of Window (width and height)
-    public static final double gravitationalConstant = 0.002;
-    public static final double lightSpeed = 10; //the smaller, the larger is the chunk of universe we simulate
-    public static final double timeFrame = 20; //the bigger, the shorter is the time of a step
+public class ModelSequential extends Model {
 
     // Model and View update. Like a tick method. Called every frame.
     @Override
