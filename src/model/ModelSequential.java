@@ -48,7 +48,7 @@ public class ModelSequential extends Model {
         }
     }
 
-    private Set<Particle> getSingleChunck(Particle current) {
+    public Set<Particle> getSingleChunck(Particle current) {
         Set<Particle> impacting = new HashSet<>();
         impacting.add(current);
         while (true) {
