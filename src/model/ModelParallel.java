@@ -25,8 +25,10 @@ public class ModelParallel extends Model {
         List<DrawableParticle> d = Collections.synchronizedList(new ArrayList<>());
 
         Color c = Color.ORANGE;
-        p.parallelStream().forEach(pa -> d.add(new DrawableParticle((int) pa.x, (int) pa.y, (int) Math.sqrt(pa.mass), c)));
-        this.pDraw = d; // atomic update
+        synchronized (this) {
+            p.parallelStream().forEach(pa -> d.add(new DrawableParticle((int) pa.x, (int) pa.y, (int) Math.sqrt(pa.mass), c)));
+            this.pDraw = d; // atomic update
+        }
     }
 
     public void mergeParticles() {
