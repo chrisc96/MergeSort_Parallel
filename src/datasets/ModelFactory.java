@@ -1,7 +1,7 @@
 package datasets;
 
 import model.Model;
-import model.ModelParallel;
+import model.ModelParallel_1;
 import model.ModelSequential;
 
 /**
@@ -19,7 +19,7 @@ public class ModelFactory {
             return new ModelSequential();
         }
         else if (type.ordinal() == 1) {
-            return new ModelParallel();
+            return new ModelParallel_1();
         }
         else {
             throw new IllegalArgumentException("Model parameter type invalid");
