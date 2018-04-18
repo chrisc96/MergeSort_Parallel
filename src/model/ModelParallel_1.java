@@ -39,21 +39,22 @@ public class ModelParallel_1 extends Model {
         LinkedBlockingDeque<Particle> deadPs = new LinkedBlockingDeque<>();
 
         List<Future<Integer>> removeAtIndex = new ArrayList<>();
-        p.parallelStream().forEach(pa -> {
+        // Submit tasks to thread pool to be run in parallel
+        p.forEach(pa -> {
             if (!pa.impacting.isEmpty()) {
-                removeAtIndex.add(pool.submit(() -> p.indexOf(pa)));
+				Future<Integer> fut = pool.submit(() -> p.indexOf(pa));
+                removeAtIndex.add(fut);
             }
         });
         for (Future<Integer> ind: removeAtIndex) {
             try {
+            	// Get index and then remove that particle from p sequentially
                 int idx = ind.get();
-                p.remove(idx);
+                p.remove(idx); // O(1)
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
-        // this.p.removeAll(deadPs);
-
 
         while (!deadPs.isEmpty()) {
             Particle current = null;
