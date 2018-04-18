@@ -17,7 +17,7 @@ public class Gui extends JFrame implements Runnable {
     //it will attempt to do 4 steps every 20 milliseconds (less if the machine is too slow)
 
     // One thread for the GUI and one for the main loop
-    public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+    public static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(3);
     Model m;
 
     Gui(Model m) {
@@ -75,7 +75,7 @@ public class Gui extends JFrame implements Runnable {
         // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelFactory.ModelType.SEQUENTIAL);
         // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelFactory.ModelType.SEQUENTIAL);
 
-        Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.SEQUENTIAL);
+        // Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.SEQUENTIAL);
 
         // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelFactory.ModelType.SEQUENTIAL);
         // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelFactory.ModelType.SEQUENTIAL);
@@ -85,10 +85,11 @@ public class Gui extends JFrame implements Runnable {
         // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelFactory.ModelType.PARALLEL);
         // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelFactory.ModelType.PARALLEL);
 
-        // Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.PARALLEL);
+        Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.PARALLEL);
 
         // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelFactory.ModelType.PARALLEL);
         // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelFactory.ModelType.PARALLEL);
+
 
         scheduler.schedule(new MainLoop(m), 500, TimeUnit.MILLISECONDS);
         SwingUtilities.invokeLater(new Gui(m));
