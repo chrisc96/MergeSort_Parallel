@@ -2,11 +2,10 @@ package model;
 
 import java.awt.*;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.List;
+import java.util.concurrent.*;
 
-public class ModelParallel extends Model {
+public class ModelParallel_1 extends Model {
 
     ExecutorService pool = Executors.newWorkStealingPool();
 
@@ -15,6 +14,7 @@ public class ModelParallel extends Model {
         // long before = System.currentTimeMillis();
         p.parallelStream().forEach(p -> p.interact(this));
         // System.out.println("Time taken: " + (System.currentTimeMillis() - before));
+
         // How to parallise this?
         mergeParticles();
 
@@ -35,28 +35,38 @@ public class ModelParallel extends Model {
     }
 
     public void mergeParticles() {
-        Stack<Particle> deadPs = new Stack<>();
+        // Uses a lock so we're thread safe when adding to this
+        LinkedBlockingDeque<Particle> deadPs = new LinkedBlockingDeque<>();
 
-        // Not worth the overheads of putting in parallel
-        for (Particle p : this.p) {
-            if (!p.impacting.isEmpty()) {
-                deadPs.add(p);
+        List<Future<Integer>> removeAtIndex = new ArrayList<>();
+        p.parallelStream().forEach(pa -> {
+            if (!pa.impacting.isEmpty()) {
+                removeAtIndex.add(pool.submit(() -> p.indexOf(pa)));
             }
-        }
-        this.p.removeAll(deadPs);
-
-        while (!deadPs.isEmpty()) {
-            Particle current = deadPs.pop();
+        });
+        for (Future<Integer> ind: removeAtIndex) {
             try {
-                Set<Particle> ps = pool.submit(() -> getSingleChunck(current)).get();
-
-                deadPs.removeAll(ps);
-
-                this.p.add(mergeParticles(ps));
-            }
-            catch (InterruptedException | ExecutionException e) {
+                int idx = ind.get();
+                p.remove(idx);
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
+        }
+        // this.p.removeAll(deadPs);
+
+
+        while (!deadPs.isEmpty()) {
+            Particle current = null;
+
+            try { current = deadPs.takeFirst(); }
+            catch (InterruptedException e) {
+                // Some other thread trying to do this, shouldn't ever happen
+            }
+
+            // Set<Particle> ps = pool.submit(() -> getSingleChunck(current)).get();
+            Set<Particle> ps = getSingleChunck(current);
+            deadPs.removeAll(ps);
+            this.p.add(mergeParticles(ps));
         }
     }
 

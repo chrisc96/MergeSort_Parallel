@@ -85,7 +85,7 @@ public class Gui extends JFrame implements Runnable {
         // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelFactory.ModelType.PARALLEL);
         // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelFactory.ModelType.PARALLEL);
 
-         Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.PARALLEL);
+        Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelFactory.ModelType.PARALLEL);
 
         // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelFactory.ModelType.PARALLEL);
         // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelFactory.ModelType.PARALLEL);
