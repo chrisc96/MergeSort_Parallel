@@ -1,13 +1,15 @@
 package datasets;
 
+import java.security.Provider;
 import java.util.Random;
+import java.util.function.Supplier;
 
 import model.Model;
 import model.Particle;
 
 public class DataSetLoader {
-    public static Model getRegularGrid(int min, int max, int distance, ModelFactory.ModelType type) {
-        Model result = new ModelFactory().createModel(type);
+    public static Model getRegularGrid(int min, int max, int distance, Supplier<Model> mSupplier) {
+        Model result = mSupplier.get();
         for (int i = min; i < max; i += distance) {
             for (int j = min; j < max; j += distance) {
                 result.p.add(new Particle(0.5, 0, 0, i, j));
@@ -16,8 +18,8 @@ public class DataSetLoader {
         return result;
     }
 
-    public static Model getRandomGrid(int min, int max, int distance, ModelFactory.ModelType type) {
-        Model result = new ModelFactory().createModel(type);
+    public static Model getRandomGrid(int min, int max, int distance, Supplier<Model> mSupplier) {
+        Model result = mSupplier.get();
         Random r = new Random(1);
         for (int i = min; i < max; i += distance) {
             for (int j = min; j < max; j += distance) {
@@ -27,8 +29,8 @@ public class DataSetLoader {
         return result;
     }
 
-    public static Model getRandomSet(int min, int max, int size, ModelFactory.ModelType type) {
-        Model result = new ModelFactory().createModel(type);
+    public static Model getRandomSet(int min, int max, int size, Supplier<Model> mSupplier) {
+        Model result = mSupplier.get();
         Random r = new Random(1);
         for (int i = 0; i < size; i++) {
             result.p.add(new Particle(0.5, 0, 0, min + r.nextInt(max - min) + 0.5 - r.nextDouble(), min + r.nextInt(max - min) + 0.5 - r.nextDouble()));
@@ -36,8 +38,8 @@ public class DataSetLoader {
         return result;
     }
 
-    public static Model getRandomRotatingGrid(int min, int max, int distance, ModelFactory.ModelType type) {
-        Model result = new ModelFactory().createModel(type);
+    public static Model getRandomRotatingGrid(int min, int max, int distance, Supplier<Model> mSupplier) {
+        Model result = mSupplier.get();
         Random r = new Random(1);
         for (int i = min; i < max; i += distance) {
             for (int j = min; j < max; j += distance) {
