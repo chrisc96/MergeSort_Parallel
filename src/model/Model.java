@@ -17,4 +17,6 @@ public abstract class Model {
     public volatile List<DrawableParticle> pDraw = new ArrayList<>();
 
     public abstract void step();
+    public abstract void mergeParticles();
+    public abstract void updateGraphicalRepresentation();
 }

@@ -19,7 +19,7 @@ public class ModelParallel extends Model {
         updateGraphicalRepresentation();
     }
 
-    private void updateGraphicalRepresentation() {
+    public void updateGraphicalRepresentation() {
         // Make sure it's thread safe
         List<DrawableParticle> d = Collections.synchronizedList(new ArrayList<>());
 
@@ -67,7 +67,7 @@ public class ModelParallel extends Model {
         return impacting;
     }
 
-    public Particle mergeParticles(Set<Particle> ps) {
+    private Particle mergeParticles(Set<Particle> ps) {
         return new ModelSequential().mergeParticles(ps);
     }
 }
