@@ -10,11 +10,10 @@ import javax.swing.*;
 import datasets.DataSetLoader;
 import model.Model;
 import model.ModelParallel;
-import model.ModelSequential;
 
 public class Gui extends JFrame implements Runnable {
-    private static int frameTime = 10; //use a bigger or smaller number for faster/slower simulation
-    private static int stepsForFrame = 20; //use a bigger or smaller number for faster/slower simulation
+    public static int frameTime = 10; //use a bigger or smaller number for faster/slower simulation
+    public static int stepsForFrame = 20; //use a bigger or smaller number for faster/slower simulation
     //it will attempt to do 4 steps every 20 milliseconds (less if the machine is too slow)
 
     // One thread for the GUI and one for the main loop

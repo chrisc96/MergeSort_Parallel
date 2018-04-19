@@ -23,7 +23,7 @@ public class ModelSequential extends Model {
         updateGraphicalRepresentation();
     }
 
-    private void updateGraphicalRepresentation() {
+    public void updateGraphicalRepresentation() {
         ArrayList<DrawableParticle> d = new ArrayList<>();
         Color c = Color.ORANGE;
         for (Particle p : this.p) {
