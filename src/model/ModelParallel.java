@@ -7,10 +7,9 @@ import java.util.concurrent.*;
 
 public class ModelParallel extends Model {
 
-    ExecutorService pool = Executors.newCachedThreadPool();
-
     @Override
     public void step() {
+        // Main step
         p.parallelStream().forEach(p -> p.interact(this));
 
         mergeParticles();
@@ -45,14 +44,9 @@ public class ModelParallel extends Model {
         while (!deadPs.isEmpty()) {
             Particle finalCurrent = deadPs.getFirst();
             Set<Particle> ps;
-            try {
-                ps = pool.submit(() -> getSingleChunck(finalCurrent)).get();
-                deadPs.removeAll(ps);
-                this.p.add(mergeParticles(ps));
-            }
-            catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+            ps = getSingleChunck(finalCurrent);
+            deadPs.removeAll(ps);
+            this.p.add(mergeParticles(ps));
         }
     }
 

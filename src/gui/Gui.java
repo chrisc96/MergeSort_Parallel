@@ -14,7 +14,7 @@ import model.ModelSequential;
 
 public class Gui extends JFrame implements Runnable {
     private static int frameTime = 10; //use a bigger or smaller number for faster/slower simulation
-    private static int stepsForFrame = 60; //use a bigger or smaller number for faster/slower simulation
+    private static int stepsForFrame = 20; //use a bigger or smaller number for faster/slower simulation
     //it will attempt to do 4 steps every 20 milliseconds (less if the machine is too slow)
 
     // One thread for the GUI and one for the main loop
@@ -34,7 +34,7 @@ public class Gui extends JFrame implements Runnable {
         setVisible(true);
         scheduler.scheduleAtFixedRate(
                 () -> SwingUtilities.invokeLater(this::repaint),
-                20, 100, TimeUnit.MILLISECONDS
+                500, 25, TimeUnit.MILLISECONDS
         );
     }
 
@@ -72,6 +72,7 @@ public class Gui extends JFrame implements Runnable {
 
     public static void main(String[] args) {
 
+        // --------
         // Sequential Models
 
         // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelSequential::new);
@@ -80,7 +81,7 @@ public class Gui extends JFrame implements Runnable {
         // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelSequential::new);
         // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelSequential::new);
 
-
+        // --------
         // Parallel Models
 
         // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelParallel::new);
@@ -89,6 +90,7 @@ public class Gui extends JFrame implements Runnable {
         // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelParallel::new);
         // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelParallel::new);
 
+        // --------
 
         scheduler.schedule(new MainLoop(m), 500, TimeUnit.MILLISECONDS);
         SwingUtilities.invokeLater(new Gui(m));
