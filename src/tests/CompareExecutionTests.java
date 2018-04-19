@@ -175,15 +175,15 @@ public class CompareExecutionTests {
         long mid = parallelTime + parallelTimeOpt + sequentialTime - min - max;
 
         if (min == parallelTime) {
-            System.out.printf("Particle size was %d.\t\tParallel was fastest!\t\t(par = %2d ms vs parOpt = %2d vs seq = %2d ms)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
+            System.out.printf("Particle size was %d.\t\tParallel was fastest!\t\t\t(par = %2d ms vs parOpt = %2d vs seq = %2d ms)\t\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
                     simulationSize, parallelTime, parallelTimeOpt, sequentialTime, ((float) max/min), RUNS);
         }
         else if (min == parallelTimeOpt) {
-            System.out.printf("Particle size was %d.\t\tParallelOpt was fastest!\t\t(parOpt = %2d ms vs par = %2d vs seq = %2d ms)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
+            System.out.printf("Particle size was %d.\t\tParallelOpt was fastest!\t\t(parOpt = %2d ms vs par = %2d ms vs seq = %2d ms)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
                     simulationSize, parallelTimeOpt, parallelTime, sequentialTime, ((float) max/min), RUNS);
         }
         else {
-            System.out.printf("Particle size was %d.\t\tSequential was fastest!\t\t(seq = %2d ms vs parOpt = %2d ms vs par = %2d)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
+            System.out.printf("Particle size was %d.\t\tSequential was fastest!\t\t\t(seq = %2d ms vs parOpt = %2d ms vs par = %2d)\t\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
                     simulationSize, sequentialTime, parallelTimeOpt, parallelTime, ((float) max/min), RUNS);
         }
     }
