@@ -1,9 +1,6 @@
 package tests;
 
-import model.Model;
-import model.ModelParallel;
-import model.ModelSequential;
-import model.Particle;
+import model.*;
 import org.junit.Test;
 
 import java.math.BigInteger;
@@ -124,12 +121,14 @@ public class CompareExecutionTests {
      */
     public void CompareMethod_AnySize(int simulationSize) {
         Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallel::new);
+        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallelOptimised::new);
         Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelSequential::new);
 
         long parrallelTime = timeOf(mPar::step, WARMUPS, RUNS);
+        long parrallelTimeOpt = timeOf(mParOpt::step, WARMUPS, RUNS);
         long sequentialTime = timeOf(mSeq::step, WARMUPS, RUNS);
 
-        outputTimings(parrallelTime, sequentialTime, mPar.p.size());
+        outputTimings(parrallelTime, parrallelTimeOpt, sequentialTime, mPar.p.size());
     }
 
     /**
@@ -138,12 +137,14 @@ public class CompareExecutionTests {
      */
     public void CompareMergeParticles_AnySize(int simulationSize) {
         Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallel::new);
+        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallelOptimised::new);
         Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelSequential::new);
 
         long parrallelTime = timeOf(mPar::mergeParticles, WARMUPS, RUNS);
+        long parrallelTimeOpt = timeOf(mParOpt::mergeParticles, WARMUPS, RUNS);
         long sequentialTime = timeOf(mSeq::mergeParticles, WARMUPS, RUNS);
 
-        outputTimings(parrallelTime, sequentialTime, mPar.p.size());
+        outputTimings(parrallelTime, parrallelTimeOpt, sequentialTime, mPar.p.size());
     }
 
     /**
@@ -152,28 +153,38 @@ public class CompareExecutionTests {
      */
     public void CompareUpdateGui_AnySize(int simulationSize) {
         Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallel::new);
+        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallelOptimised::new);
         Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelSequential::new);
 
         long parrallelTime = timeOf(mPar::updateGraphicalRepresentation, WARMUPS, RUNS);
+        long parrallelTimeOpt = timeOf(mParOpt::updateGraphicalRepresentation, WARMUPS, RUNS);
         long sequentialTime = timeOf(mSeq::updateGraphicalRepresentation, WARMUPS, RUNS);
 
-        outputTimings(parrallelTime, sequentialTime, mPar.p.size());
+        outputTimings(parrallelTime, parrallelTimeOpt, sequentialTime, mPar.p.size());
     }
 
     /**
      * Outputs results of test to console
-     * @param parrallelTime time the parallel execution took
+     * @param parallelTime time the parallel execution took
      * @param sequentialTime time the sequential execution took
      * @param simulationSize size of the simulation at this test
      */
-    private void outputTimings(long parrallelTime, long sequentialTime, int simulationSize) {
-        if (parrallelTime < sequentialTime) {
-            System.out.printf("Particle size was %d.\t\tParallel was faster!\t\t(par = %2d ms vs seq = %2d ms)\t\t%.2f times faster\t\tTested over %d runs\n",
-                    simulationSize, parrallelTime, sequentialTime, ((float) sequentialTime/parrallelTime), RUNS);
+    private void outputTimings(long parallelTime, long parallelTimeOpt, long sequentialTime, int simulationSize) {
+        long min = Math.min(Math.min(parallelTime, parallelTimeOpt), sequentialTime);
+        long max = Math.max(Math.max(parallelTime, parallelTimeOpt), sequentialTime);
+        long mid = parallelTime + parallelTimeOpt + sequentialTime - min - max;
+
+        if (min == parallelTime) {
+            System.out.printf("Particle size was %d.\t\tParallel was fastest!\t\t(par = %2d ms vs parOpt = %2d vs seq = %2d ms)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
+                    simulationSize, parallelTime, parallelTimeOpt, sequentialTime, ((float) max/min), RUNS);
+        }
+        else if (min == parallelTimeOpt) {
+            System.out.printf("Particle size was %d.\t\tParallelOpt was fastest!\t\t(parOpt = %2d ms vs par = %2d vs seq = %2d ms)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
+                    simulationSize, parallelTimeOpt, parallelTime, sequentialTime, ((float) max/min), RUNS);
         }
         else {
-            System.out.printf("Particle size was %d.\t\tSequential was faster!\t\t(seq = %2d ms vs par = %2d ms)\t\t%.2f times faster\t\tTested over %d runs\n",
-                    simulationSize, sequentialTime, parrallelTime, ((float) parrallelTime/sequentialTime), RUNS);
+            System.out.printf("Particle size was %d.\t\tSequential was fastest!\t\t(seq = %2d ms vs parOpt = %2d ms vs par = %2d)\t\t%.2f times faster than slowest\t\tTested over %d runs\n",
+                    simulationSize, sequentialTime, parallelTimeOpt, parallelTime, ((float) max/min), RUNS);
         }
     }
 

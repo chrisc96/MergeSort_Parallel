@@ -10,6 +10,7 @@ import javax.swing.*;
 import datasets.DataSetLoader;
 import model.Model;
 import model.ModelParallel;
+import model.ModelParallelOptimised;
 
 public class Gui extends JFrame implements Runnable {
     public static int frameTime = 10; //use a bigger or smaller number for faster/slower simulation
@@ -85,9 +86,15 @@ public class Gui extends JFrame implements Runnable {
 
         // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelParallel::new);
         // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelParallel::new);
-        Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelParallel::new);
+        // Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelParallel::new);
         // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelParallel::new);
         // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelParallel::new);
+
+        // Model m = DataSetLoader.getRegularGrid(100, 800, 40, ModelParallelOptimised::new);
+        // Model m = DataSetLoader.getRandomRotatingGrid(100, 800, 40, ModelParallelOptimised::new);
+        Model m = DataSetLoader.getRandomSet(100, 800, 1000, ModelParallelOptimised::new);
+        // Model m = DataSetLoader.getRandomSet(100, 800, 100, ModelParallelOptimised::new);
+        // Model m = DataSetLoader.getRandomGrid(100, 800, 30, ModelParallelOptimised::new);
 
         // --------
 
