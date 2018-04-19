@@ -2,8 +2,8 @@ package model;
 
 import java.awt.*;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class ModelParallel extends Model {
 
@@ -20,14 +20,11 @@ public class ModelParallel extends Model {
     }
 
     public void updateGraphicalRepresentation() {
-        // Make sure it's thread safe
-        List<DrawableParticle> d = Collections.synchronizedList(new ArrayList<>());
+        LinkedBlockingDeque<DrawableParticle> d = new LinkedBlockingDeque<>();
 
         Color c = Color.ORANGE;
-        synchronized (this) {
-            p.parallelStream().forEach(pa -> d.add(new DrawableParticle((int) pa.x, (int) pa.y, (int) Math.sqrt(pa.mass), c)));
-            this.pDraw = d; // atomic update
-        }
+        p.parallelStream().forEach(pa -> d.add(new DrawableParticle((int) pa.x, (int) pa.y, (int) Math.sqrt(pa.mass), c)));
+        this.pDraw = d.stream().collect(Collectors.toList());
     }
 
     public void mergeParticles() {
