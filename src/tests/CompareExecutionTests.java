@@ -177,6 +177,13 @@ public class CompareExecutionTests {
         }
     }
 
+    /**
+     *
+     * @param r
+     * @param warmUp
+     * @param runs
+     * @return
+     */
     long timeOf(Runnable r, int warmUp, int runs) {
         System.gc();
         for (int i = 0; i < warmUp; i++) {
@@ -190,12 +197,10 @@ public class CompareExecutionTests {
         return time1 - time0;
     }
 
-    public Model createModelFromDataSet(List<Particle> dataset, Supplier<Model> mSupplier) {
-        Model m = mSupplier.get();
-        m.p = new ArrayList<>(dataset);
-        return m;
-    }
-
+    /**
+     * @param setSize
+     * @return
+     */
     public List<Particle> generateUniformDataSet(int setSize) {
         List<Particle> p = new ArrayList<>();
         Random r = new Random(0);
@@ -203,5 +208,17 @@ public class CompareExecutionTests {
             p.add(new Particle(0.5, 0, 0, new BigInteger(250, r).doubleValue(), new BigInteger(250, r).doubleValue()));
         }
         return p;
+    }
+
+    /**
+     *
+     * @param dataset
+     * @param mSupplier
+     * @return
+     */
+    public Model createModelFromDataSet(List<Particle> dataset, Supplier<Model> mSupplier) {
+        Model m = mSupplier.get();
+        m.p = new ArrayList<>(dataset);
+        return m;
     }
 }
