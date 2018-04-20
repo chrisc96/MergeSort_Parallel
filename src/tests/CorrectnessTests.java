@@ -13,10 +13,6 @@ import static tests.CompareExecutionTests.generateUniformDataSet;
 
 public class CorrectnessTests {
 
-    // Need to make sure each method does what it says it does for each model.
-
-
-
     /**
      * This test method creates an instance of each execution method
      * with a simulation size of a 100 in a 1024 x 1024 grid
@@ -63,6 +59,7 @@ public class CorrectnessTests {
             runCount++;
         }
     }
+
 
 
     /**
