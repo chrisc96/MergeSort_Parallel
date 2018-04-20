@@ -3,6 +3,13 @@ package model;
 import java.awt.*;
 import java.util.*;
 
+/**
+ * By analysing the model sequential and model parallel
+ * implementation, I knew what was faster and slower,
+ * what needed to be parallised and what didn't. This
+ * class is a combination of both of them that should be faster
+ * in most cases than both.
+ */
 public class ModelParallelOptimised extends Model {
 
     @Override
@@ -10,10 +17,12 @@ public class ModelParallelOptimised extends Model {
         // Main step
         p.parallelStream().forEach(p -> p.interact(this));
 
+        // Sequentially
         mergeParticles();
 
         p.parallelStream().forEach(p -> p.move(this));
 
+        // Sequentially
         updateGraphicalRepresentation();
     }
 
