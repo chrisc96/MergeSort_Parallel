@@ -6,7 +6,9 @@ import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
- * This Model is WAY over parallelised
+ * This Model is WAY over parallelised. Most of the parallelism works
+ * on many read many write contentions where I had to use blockedQueues
+ * to make sure concurrent modifications weren't occuring.
  */
 public class ModelParallel extends Model {
 
