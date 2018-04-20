@@ -1,6 +1,7 @@
 package model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static model.Model.*;
@@ -86,5 +87,18 @@ public class Particle {
                 this.speedY = newSpeedY;
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Particle particle = (Particle) o;
+        return Double.compare(particle.mass, mass) == 0 &&
+                Double.compare(particle.speedX, speedX) == 0 &&
+                Double.compare(particle.speedY, speedY) == 0 &&
+                Double.compare(particle.x, x) == 0 &&
+                Double.compare(particle.y, y) == 0 &&
+                Objects.equals(impacting, particle.impacting);
     }
 }

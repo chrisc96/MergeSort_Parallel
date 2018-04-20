@@ -5,6 +5,9 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+/**
+ * This Model is WAY over parallelised
+ */
 public class ModelParallel extends Model {
 
     @Override
@@ -24,11 +27,11 @@ public class ModelParallel extends Model {
 
         Color c = Color.ORANGE;
         p.parallelStream().forEach(pa -> d.add(new DrawableParticle((int) pa.x, (int) pa.y, (int) Math.sqrt(pa.mass), c)));
-        this.pDraw = d.stream().collect(Collectors.toList());
+        this.pDraw = new ArrayList<>(d);
     }
 
     public void mergeParticles() {
-        // Uses a lock so we're thread safe when adding to this
+        // Uses blocking so we're thread safe when adding to this as we wait for other threads to stop using
         LinkedBlockingDeque<Particle> deadPs = new LinkedBlockingDeque<>();
 
         p.parallelStream().forEach(pa -> {

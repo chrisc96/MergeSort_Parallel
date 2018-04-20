@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Objects;
 
 public class DrawableParticle {
     public DrawableParticle(int x, int y, int r, Color c) {
@@ -11,8 +12,8 @@ public class DrawableParticle {
         this.c = c;
     }
 
-    int x;
-    int y;
+    public int x;
+    public int y;
     int r;
     Color c;
 

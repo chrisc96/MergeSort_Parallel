@@ -15,6 +15,8 @@ public class CompareExecutionTests {
     static final int WARMUPS = 100;
     static final int RUNS = 200;
 
+    static final int maxParticleValue = 1024;
+
     /**
      * These two tests output the time taken for the step() method in the model
      * class to complete at incrementing simulation sizes
@@ -120,9 +122,9 @@ public class CompareExecutionTests {
      * @param simulationSize
      */
     public void CompareMethod_AnySize(int simulationSize) {
-        Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallel::new);
-        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallelOptimised::new);
-        Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelSequential::new);
+        Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelParallel::new);
+        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelParallelOptimised::new);
+        Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelSequential::new);
 
         long parrallelTime = timeOf(mPar::step, WARMUPS, RUNS);
         long parrallelTimeOpt = timeOf(mParOpt::step, WARMUPS, RUNS);
@@ -136,9 +138,9 @@ public class CompareExecutionTests {
      * @param simulationSize
      */
     public void CompareMergeParticles_AnySize(int simulationSize) {
-        Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallel::new);
-        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallelOptimised::new);
-        Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelSequential::new);
+        Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelParallel::new);
+        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelParallelOptimised::new);
+        Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelSequential::new);
 
         long parrallelTime = timeOf(mPar::mergeParticles, WARMUPS, RUNS);
         long parrallelTimeOpt = timeOf(mParOpt::mergeParticles, WARMUPS, RUNS);
@@ -152,9 +154,9 @@ public class CompareExecutionTests {
      * @param simulationSize
      */
     public void CompareUpdateGui_AnySize(int simulationSize) {
-        Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallel::new);
-        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelParallelOptimised::new);
-        Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize), ModelSequential::new);
+        Model mPar = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelParallel::new);
+        Model mParOpt = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelParallelOptimised::new);
+        Model mSeq = createModelFromDataSet(generateUniformDataSet(simulationSize, maxParticleValue), ModelSequential::new);
 
         long parrallelTime = timeOf(mPar::updateGraphicalRepresentation, WARMUPS, RUNS);
         long parrallelTimeOpt = timeOf(mParOpt::updateGraphicalRepresentation, WARMUPS, RUNS);
@@ -212,11 +214,14 @@ public class CompareExecutionTests {
      * @param setSize
      * @return
      */
-    public List<Particle> generateUniformDataSet(int setSize) {
+    public static List<Particle> generateUniformDataSet(int setSize, int maxValue) {
         List<Particle> p = new ArrayList<>();
         Random r = new Random(0);
         for (int i = 0; i < setSize; i++) {
-            p.add(new Particle(0.5, 0, 0, new BigInteger(250, r).doubleValue(), new BigInteger(250, r).doubleValue()));
+            // Uses the max value passed in to determine numBits to pass to BigInteger
+            // I.E 900 = Log(900)/Log(2) = ~9.81 ~ 10.0 numBits ~ 1024 max value. Approx.
+            BigInteger numBitsLog2 = new BigInteger((int) Math.ceil(Math.log(maxValue)/Math.log(2)), r);
+            p.add(new Particle(0.5, 0, 0, numBitsLog2.doubleValue(), numBitsLog2.doubleValue()));
         }
         return p;
     }
@@ -227,7 +232,7 @@ public class CompareExecutionTests {
      * @param mSupplier
      * @return
      */
-    public Model createModelFromDataSet(List<Particle> dataset, Supplier<Model> mSupplier) {
+    public static Model createModelFromDataSet(List<Particle> dataset, Supplier<Model> mSupplier) {
         Model m = mSupplier.get();
         m.p = new ArrayList<>(dataset);
         return m;
